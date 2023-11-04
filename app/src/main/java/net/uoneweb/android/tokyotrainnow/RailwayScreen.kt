@@ -15,36 +15,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import net.uoneweb.android.tokyotrainnow.entity.Railway
+import net.uoneweb.android.tokyotrainnow.entity.RailwayStatus
 import net.uoneweb.android.tokyotrainnow.entity.Section
 
 @Composable
 fun RailwayScreen(
     viewModel: RailwayViewModel
 ) {
-    val railway = viewModel.railway.collectAsState(initial = null)
+    val railway = viewModel.railwayStatus.collectAsState(initial = null)
     railway.value?.let {
-        Railway(railway = it)
+        Railway(railwayStatus = it)
     }
 }
 
 @Composable
-fun Railway(modifier: Modifier = Modifier, railway: Railway) {
+fun Railway(modifier: Modifier = Modifier, railwayStatus: RailwayStatus) {
     LazyColumn {
         item {
-            val color = Color(railway.color)
+            val color = Color(railwayStatus.color)
             Box(
                 Modifier
                     .background(color)
                     .fillMaxWidth()
                     .padding(16.dp)) {
-                Text(modifier = modifier, text = railway.railwayTitle["ja"] ?: "")
+                Text(modifier = modifier, text = railwayStatus.railwayTitle["ja"] ?: "")
             }
         }
-        items(railway.sections) {
-            when(it) {
-                is Section.Station -> Text(text = it.title["ja"] ?: "")
-                is Section.InterStation -> Text(text = "-")
+        items(railwayStatus.sections) {
+            Box(modifier = Modifier.fillMaxWidth().padding(16.dp, 8.dp)) {
+                when (it) {
+                    is Section.Station -> Text(text = it.title["ja"] ?: "")
+                    is Section.InterStation -> Text(text = "|")
+                }
             }
         }
     }
@@ -54,7 +56,7 @@ fun Railway(modifier: Modifier = Modifier, railway: Railway) {
 @Composable
 fun RailwayPreview() {
     Surface {
-        Railway(railway = Railway(
+        Railway(railwayStatus = RailwayStatus(
             color = parseColor("#CF3366"),
             railwayTitle = mapOf("ja" to "大江戸線", "en" to "Oedo Line"),
             sections = listOf(
