@@ -1,23 +1,25 @@
 package net.uoneweb.android.odpt
 
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-class RailwayRepository {
+class RailwayRepository @Inject constructor(
+    private val apiConfig: ApiConfig
+) {
 
     private val service: RailwayService
 
     init {
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.example.com") // 実際のベースURLに置き換えてください
+            .baseUrl(apiConfig.baseUri)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         service = retrofit.create(RailwayService::class.java)
     }
 
-    fun getRailwayData(consumerKey: String): Call<List<Railway>> {
-        return service.getRailwayData(consumerKey)
+    suspend fun getRailwayData(): List<Railway> {
+        return service.getRailwayData(apiConfig.consumerKey)
     }
 }
