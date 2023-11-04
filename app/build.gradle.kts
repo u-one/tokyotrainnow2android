@@ -1,3 +1,5 @@
+import java.util.*
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -18,6 +20,14 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        val credentialProperties = Properties()
+        val localPropertiesFile = rootProject.file("credential.properties")
+        if (localPropertiesFile.exists()) {
+            localPropertiesFile.inputStream().use { credentialProperties.load(it) }
+        }
+        val odptApiConsumerKey = credentialProperties.getProperty("ODPT_API_CONSUMER_KEY") ?: System.getenv("ODPT_API_CONSUMER_KEY") ?: ""
+        buildConfigField("String", "ODPT_API_CONSUMER_KEY", "\"$odptApiConsumerKey\"")
     }
 
     buildTypes {
@@ -38,6 +48,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -66,4 +77,9 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+
 }
