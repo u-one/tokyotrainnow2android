@@ -6,6 +6,7 @@ data class Railway(
     val railwayTitle: Map<String, String> = mapOf()) {
 
     data class Station(
+        val stationId: String,
         val stationTitle: Map<String, String>,
     )
 }

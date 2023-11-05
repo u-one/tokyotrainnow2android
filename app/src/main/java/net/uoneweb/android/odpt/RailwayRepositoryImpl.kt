@@ -50,6 +50,7 @@ class RailwayRepositoryImpl @Inject constructor(
             it.index
         }.map {
             RailwayEntity.Station(
+                stationId = it.station,
                 stationTitle = it.stationTitle
             )
         }.toList()

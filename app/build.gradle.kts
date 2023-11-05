@@ -110,6 +110,8 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$androidxNavigation")
     implementation("androidx.hilt:hilt-navigation-compose:$androidxHiltNavigationCompose")
 
+    testImplementation("com.google.truth:truth:1.1.4")
+
 }
 
 
