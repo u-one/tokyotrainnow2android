@@ -26,8 +26,8 @@ class RailwayDataSource @Inject constructor(
         return service.getRailwayData(apiConfig.consumerKey)
     }
 
-    suspend fun getTrains(): List<Train> {
-        return service.getTrains(apiConfig.consumerKey)
+    suspend fun getTrains(railway: String): List<Train> {
+        return service.getTrains(railway, apiConfig.consumerKey)
     }
 
     suspend fun getRailDirections(): List<RailDirection> {

@@ -3,6 +3,7 @@ package net.uoneweb.android.odpt
 import android.graphics.Color.parseColor
 import net.uoneweb.android.tokyotrainnow.RailwayRepository
 import net.uoneweb.android.tokyotrainnow.entity.RailDirection
+import net.uoneweb.android.tokyotrainnow.entity.Train
 import javax.inject.Inject
 import net.uoneweb.android.tokyotrainnow.entity.Railway as RailwayEntity
 
@@ -16,6 +17,20 @@ class RailwayRepositoryImpl @Inject constructor(
         }?.let {
             toRailwayEntity(it)
         } ?:  RailwayEntity(0, listOf())
+    }
+
+    override suspend fun getTrains(railway: String): List<Train> {
+        return railwayDataSource.getTrains(railway).map {
+            Train(
+                trainNumber = it.trainNumber,
+                trainType = it.trainType,
+                fromStation = it.fromStation,
+                toStation = it.toStation ?: "",
+                destinationStation = it.destinationStation,
+                delay = it.delay,
+                carComposition = it.carComposition
+            )
+        }
     }
 
     private fun toRailwayEntity(railway: Railway): RailwayEntity {

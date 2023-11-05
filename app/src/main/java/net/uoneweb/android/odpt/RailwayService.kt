@@ -8,7 +8,7 @@ interface RailwayService {
     suspend fun getRailwayData(@Query("acl:consumerKey") consumerKey: String): List<Railway>
 
     @GET("/api/v4/odpt:Train")
-    suspend fun getTrains(@Query("acl:consumerKey") consumerKey: String): List<Train>
+    suspend fun getTrains(@Query("odpt:railway") railway: String, @Query("acl:consumerKey") consumerKey: String): List<Train>
 
     @GET("/api/v4/odpt:RailDirection")
     suspend fun getRailDirections(@Query("acl:consumerKey") consumerKey: String): List<RailDirection>

@@ -2,6 +2,7 @@ package net.uoneweb.android.tokyotrainnow.entity
 
 data class Train(
     val railDirection: String = "",
+    val trainType: String = "",
     val trainNumber: String = "",
     val fromStation: String = "",
     val toStation: String = "",

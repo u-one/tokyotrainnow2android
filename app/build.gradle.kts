@@ -82,6 +82,7 @@ dependencies {
     val retrofit = "2.9.0"
     val hilt = "2.48.1" // 2.44
     val androidxHiltNavigationCompose = "1.0.0"
+    val androidxNavigation = "2.7.4"
 
     implementation(platform("androidx.compose:compose-bom:$androidxComposeBom"))
     implementation("androidx.activity:activity-compose: $androidxActivity")
@@ -106,6 +107,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofit")
     implementation("com.google.dagger:hilt-android:$hilt")
     kapt("com.google.dagger:hilt-android-compiler:$hilt")
+    implementation("androidx.navigation:navigation-compose:$androidxNavigation")
     implementation("androidx.hilt:hilt-navigation-compose:$androidxHiltNavigationCompose")
 
 }
