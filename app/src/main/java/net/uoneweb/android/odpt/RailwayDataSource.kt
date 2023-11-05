@@ -33,4 +33,12 @@ class RailwayDataSource @Inject constructor(
     suspend fun getRailDirections(): List<RailDirection> {
         return service.getRailDirections(apiConfig.consumerKey)
     }
+
+    suspend fun getTrainTypes(): List<TrainType> {
+        return service.getTrainTypes(apiConfig.consumerKey)
+    }
+
+    suspend fun getStations(operator: String): List<Station> {
+        return service.getStations(operator, apiConfig.consumerKey)
+    }
 }
