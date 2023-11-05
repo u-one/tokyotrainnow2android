@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import net.uoneweb.android.tokyotrainnow.entity.RailwayStatus
 import net.uoneweb.android.tokyotrainnow.entity.Section
+import net.uoneweb.android.tokyotrainnow.entity.Train
 
 @Composable
 fun RailwayScreen(
@@ -61,9 +62,10 @@ fun RailwayPreview() {
             railwayTitle = mapOf("ja" to "大江戸線", "en" to "Oedo Line"),
             sections = listOf(
                 Section.Station(
-                    title = mapOf("ja" to "都庁前", "en" to "Tochomae")
+                    title = mapOf("ja" to "都庁前", "en" to "Tochomae"),
+                    trains = listOf(Train(trainNumber = "1234"))
                 ),
-                Section.InterStation(),
+                Section.InterStation(trains = listOf(Train())),
                 Section.Station(
                     title = mapOf("ja" to "新宿西口", "en" to "ShinjukuNishiguchi")
                 ),

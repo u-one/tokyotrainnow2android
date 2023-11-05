@@ -2,6 +2,7 @@ package net.uoneweb.android.odpt
 
 import android.graphics.Color.parseColor
 import net.uoneweb.android.tokyotrainnow.RailwayRepository
+import net.uoneweb.android.tokyotrainnow.entity.RailDirection
 import javax.inject.Inject
 import net.uoneweb.android.tokyotrainnow.entity.Railway as RailwayEntity
 
@@ -31,5 +32,17 @@ class RailwayRepositoryImpl @Inject constructor(
             color = parseColor(railway.color),
             stations = stations
         )
+    }
+
+    private val railDirections = mutableMapOf<String, RailDirection>()
+    suspend fun getRailDirection(direction: String): RailDirection {
+        if (railDirections.isEmpty()) {
+            railwayDataSource.getRailDirections()
+                .map { RailDirection(it.sameAs, it.railDirectionTitle) }
+                .forEach {
+                    railDirections[it.sameAs] = it
+                }
+        }
+        return railDirections[direction] ?: RailDirection.Empty
     }
 }
