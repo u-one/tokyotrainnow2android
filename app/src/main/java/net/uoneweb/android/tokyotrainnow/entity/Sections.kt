@@ -10,6 +10,7 @@ data class Sections(
     }
 
     fun add(train: Train): Sections {
+        // TODO: consider direction
         val from = train.fromStation
         val to = train.toStation
         val newSections = sections.toMutableList()
