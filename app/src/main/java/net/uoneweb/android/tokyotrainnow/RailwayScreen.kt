@@ -1,25 +1,25 @@
 package net.uoneweb.android.tokyotrainnow
 
 import android.graphics.Color.parseColor
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,22 +44,25 @@ fun RailwayScreen(
 @Composable
 fun Railway(modifier: Modifier = Modifier, railwayStatus: RailwayStatus) {
     LazyColumn {
+        val color = Color(railwayStatus.color)
         item {
-            val color = Color(railwayStatus.color)
             Box(
                 Modifier
                     .background(color)
                     .fillMaxWidth()
-                    .padding(16.dp)) {
+                    .padding(16.dp)
+            ) {
                 Text(modifier = modifier, text = railwayStatus.railwayTitle["ja"] ?: "")
             }
         }
         items(railwayStatus.sections.sections) {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp, 8.dp)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp, 0.dp)
+            ) {
                 when (it) {
-                    is Section.Station -> Station(Color(railwayStatus.color),it)
+                    is Section.Station -> Station(Color(railwayStatus.color), it)
                     is Section.InterStation -> InterStation(Color(railwayStatus.color), it)
                 }
 
@@ -70,13 +73,13 @@ fun Railway(modifier: Modifier = Modifier, railwayStatus: RailwayStatus) {
 
 @Composable
 fun Station(lineColor: Color, section: Section.Station) {
-    Row {
+    Row(modifier = Modifier.height(IntrinsicSize.Min)) {
         Text(
             modifier = Modifier
                 .width(100.dp)
                 .align(Alignment.CenterVertically),
             text = section.title["ja"] ?: "")
-        Line(Modifier.fillMaxHeight(), lineColor, section)
+        Line(Modifier.width(20.dp).fillMaxHeight(), lineColor, section)
         Column {
             section.trains.forEach {
                 TrainOnLine(train = it)
@@ -87,9 +90,9 @@ fun Station(lineColor: Color, section: Section.Station) {
 
 @Composable
 fun InterStation(lineColor: Color, section: Section.InterStation) {
-    Row {
-        Text(modifier = Modifier.width(100.dp), text = "|")
-        Line(Modifier.fillMaxHeight(), lineColor, section)
+    Row(modifier = Modifier.height(IntrinsicSize.Min)) {
+        Text(modifier = Modifier.width(100.dp), text = "")
+        Line(Modifier.width(20.dp).fillMaxHeight(), lineColor, section)
         Column {
             section.trains.forEach {
                 TrainOnLine(train = it)
@@ -99,8 +102,18 @@ fun InterStation(lineColor: Color, section: Section.InterStation) {
 }
 
 @Composable
+fun Line(modifier : Modifier = Modifier, lineColor: Color, section: Section) {
+    Canvas(modifier = modifier) {
+        drawRect(color = lineColor)
+        if (section is Section.Station) {
+            drawCircle(color = Color.White, radius = size.width / 3)
+        }
+    }
+}
+
+@Composable
 fun TrainOnLine(train: Train) {
-    Column(modifier = Modifier.padding(vertical = 0.dp)) {
+    Column(modifier = Modifier.padding(vertical = 8.dp)) {
         Text(text = train.trainNumber)
         Row {
             Text(text = (train.trainType.titles["ja"] ?: "") + " ")
@@ -119,6 +132,61 @@ fun TrainOnLine(train: Train) {
     }
 }
 
+@Preview(widthDp = 480)
+@Composable
+fun RailwayPreview() {
+    Surface {
+        Railway(railwayStatus = RailwayStatus(
+            color = parseColor("#CF3366"),
+            railwayTitle = mapOf("ja" to "大江戸線", "en" to "Oedo Line"),
+            sections = Sections(listOf(
+                tochomaeStation(listOf(
+                    createTrain(),
+                    createTrain()
+                )),
+                interStation(listOf(
+                    createTrain(),
+                    createTrain()
+                )),
+                shinjukuNishiguchiStation(listOf(
+                    createTrain()
+                )),
+                interStation(),
+                higashiShinjukuStation()
+            )
+            )))
+    }
+}
+
+@Preview
+@Composable
+fun StationPreview() {
+    Surface {
+        Station(
+            lineColor = Color(parseColor("#CF3366")),
+            section = tochomaeStation(
+                trains = listOf(
+                    createTrain(),
+                    createTrain()
+                )
+            )
+        )
+    }
+}
+
+@Preview
+@Composable
+fun InterStationPreview() {
+    Surface {
+        InterStation(
+            lineColor = Color(parseColor("#CF3366")),
+            section = interStation(trains = listOf(
+            createTrain(),
+            createTrain()
+        )))
+    }
+}
+
 @Preview
 @Composable
 fun TrainOnLinePreview() {
@@ -127,84 +195,29 @@ fun TrainOnLinePreview() {
     }
 }
 
-@Composable
-fun Line(modifier : Modifier = Modifier, lineColor: Color, section: Section) {
-    val width = 20.dp
-    Box(modifier = modifier.fillMaxHeight()
-        .width(width)
-        .background(lineColor)) {
-        if (section is Section.Station) {
-            Box(modifier = Modifier
-                .size(width)
-                .clip(CircleShape)
-                .background(Color.White)
-                .align(Alignment.Center)
-            )
-        }
-
-    }
-}
-
-@Preview(widthDp = 20, heightDp = 240)
+@Preview(widthDp = 20, heightDp = 100)
 @Composable
 fun LinePreviewStation() {
     Surface {
         Line(
             lineColor = Color(parseColor("#CF3366")),
-            section = Section.Station(
-                stationId = "odpt.Station:Toei.Oedo.Tochomae",
-                title = mapOf("ja" to "都庁前", "en" to "Tochomae"),
-                trains = listOf()
-            )
+            section = tochomaeStation()
         )
     }
 }
 
-@Preview(widthDp = 20, heightDp = 240)
+@Preview(widthDp = 20, heightDp = 100)
 @Composable
 fun LinePreviewSection() {
     Surface {
         Line(
             lineColor = Color(parseColor("#CF3366")),
-            section = Section.InterStation(
-                trains = listOf()
-            )
+            section = interStation()
         )
     }
 }
 
-
-@Preview(widthDp = 320)
-@Composable
-fun RailwayPreview() {
-    Surface {
-        Railway(railwayStatus = RailwayStatus(
-            color = parseColor("#CF3366"),
-            railwayTitle = mapOf("ja" to "大江戸線", "en" to "Oedo Line"),
-            sections = Sections(listOf(
-                Section.Station(
-                    stationId = "odpt.Station:Toei.Oedo.Tochomae",
-                    title = mapOf("ja" to "都庁前", "en" to "Tochomae"),
-                    trains = listOf(
-                        createTrain(),
-                        createTrain()
-                    )
-                ),
-                Section.InterStation(trains = listOf(
-                    createTrain(),
-                    createTrain()
-                )),
-                Section.Station(
-                    stationId = "odpt.Station:Toei.Oedo.ShinjukuNishiguchi",
-                    title = mapOf("ja" to "新宿西口", "en" to "ShinjukuNishiguchi"),
-                    trains = listOf(createTrain())
-                )),
-            )
-        ))
-    }
-}
-
-fun createTrain() =
+private fun createTrain() =
     Train(
         railDirection = RailDirection("odpt.RailDirection:OuterLoop", mapOf("ja" to "外回り")),
         trainType = TrainType("odpt.TrainType:Toei.Local", mapOf("ja" to "各駅停車")),
@@ -215,3 +228,31 @@ fun createTrain() =
         delay = 0,
         carComposition = 0
     )
+
+private fun interStation(trains : List<Train> = listOf()) : Section.InterStation {
+    return Section.InterStation(trains)
+}
+
+private fun tochomaeStation(trains : List<Train> = listOf()) : Section.Station{
+    return Section.Station(
+        stationId = "odpt.Station:Toei.Oedo.Tochomae",
+        title = mapOf("ja" to "都庁前", "en" to "Tochomae"),
+        trains = trains
+    )
+}
+
+private fun shinjukuNishiguchiStation(trains : List<Train>) : Section.Station{
+    return Section.Station(
+        stationId = "odpt.Station:Toei.Oedo.ShinjukuNishiguchi",
+        title = mapOf("ja" to "新宿西口", "en" to "ShinjukuNishiguchi"),
+        trains = trains
+    )
+}
+
+private fun higashiShinjukuStation(trains : List<Train> = listOf()) : Section.Station{
+    return Section.Station(
+        stationId = "odpt.Station:Toei.Oedo.HigashiShinjuku",
+        title = mapOf("ja" to "東新宿", "en" to "Higashi-shinjuku"),
+        trains = trains
+    )
+}
