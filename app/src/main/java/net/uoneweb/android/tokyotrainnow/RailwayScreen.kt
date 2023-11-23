@@ -149,7 +149,10 @@ fun RailwayPreview() {
         Railway(railwayStatus = RailwayStatus(
             color = parseColor("#CF3366"),
             railwayTitle = mapOf("ja" to "大江戸線", "en" to "Oedo Line"),
-            sections = Sections(listOf(
+            sections = Sections(
+                ascending,
+                descending,
+                listOf(
                 tochomaeStation(mapOf(
                     ascending to listOf(
                     createTrain(ascending, "1427A"),

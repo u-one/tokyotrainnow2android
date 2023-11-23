@@ -28,7 +28,10 @@ class RailwayStatusTest {
         val actual = RailwayStatus(railway)
 
         assertThat(actual.color).isEqualTo(1)
-        assertThat(actual.sections).isEqualTo(Sections(listOf(
+        assertThat(actual.sections).isEqualTo(Sections(
+            ascending,
+            descending,
+            listOf(
             Section.Station("station1", mapOf(), ascending, descending, mapOf()),
             Section.InterStation(ascending, descending, mapOf()),
             Section.Station("station2", mapOf(), ascending, descending, mapOf())
@@ -38,8 +41,10 @@ class RailwayStatusTest {
 
     @Test
     fun add() {
-        val railDirection = RailDirection("odpt.RailDirection:OuterLoop")
-        val railwayStatus = RailwayStatus(sections = Sections(listOf(
+        val railwayStatus = RailwayStatus(sections = Sections(
+            ascending,
+            descending,
+            listOf(
             Section.Station("station1", mapOf(), ascending, descending, mapOf()),
             Section.InterStation(ascending, descending, mapOf()),
             Section.Station("station2", mapOf(), ascending, descending, mapOf())
@@ -47,7 +52,7 @@ class RailwayStatusTest {
 
         val actual = railwayStatus.add(
                 Train(
-                    railDirection = railDirection,
+                    railDirection = ascending,
                     fromStation = Station("station1"),
                     toStation = Station("station2")
                 )
@@ -55,7 +60,7 @@ class RailwayStatusTest {
 
         assertThat(actual).isNotEqualTo(railwayStatus)
         assertThat(actual.sections.sections[1].tracks.size).isEqualTo(1)
-        assertThat(actual.sections.sections[1].tracks[railDirection]?.size).isEqualTo(1)
+        assertThat(actual.sections.sections[1].getAscendingTrains().size).isEqualTo(1)
     }
 
     private val ascending = RailDirection("odpt.RailDirection:OuterLoop", mapOf("ja" to "外回り"))

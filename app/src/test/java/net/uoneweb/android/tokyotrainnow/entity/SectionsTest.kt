@@ -8,11 +8,14 @@ class SectionsTest {
 
     @Test
     fun add_on_station() {
-        val sections = Sections(listOf(
-            Section.Station("station1", mapOf(), ascending, descending),
-            Section.InterStation(ascending, descending),
-            Section.Station("station2", mapOf(), ascending, descending),
-        ))
+        val sections = Sections(
+            ascending,
+            descending,
+            listOf(
+                Section.Station("station1", mapOf(), ascending, descending),
+                Section.InterStation(ascending, descending),
+                Section.Station("station2", mapOf(), ascending, descending),
+            ))
 
         val train = Train(
             railDirection = ascending,
@@ -27,12 +30,15 @@ class SectionsTest {
     }
 
     @Test
-    fun add_interStation() {
-        val sections = Sections(listOf(
-            Section.Station("station1", mapOf(), ascending, descending),
-            Section.InterStation(ascending, descending),
-            Section.Station("station2", mapOf(), ascending, descending),
-        ))
+    fun add_interStation_ascending() {
+        val sections = Sections(
+            ascending,
+            descending,
+            listOf(
+                Section.Station("station1", mapOf(), ascending, descending),
+                Section.InterStation(ascending, descending),
+                Section.Station("station2", mapOf(), ascending, descending),
+            ))
 
         val train = Train(
             railDirection = ascending,
@@ -42,19 +48,46 @@ class SectionsTest {
 
         val actual = sections.add(train)
 
-        assertThat(actual.sections[1].tracks.size).isEqualTo(1)
-        assertThat(sections.sections[1].tracks.size).isEqualTo(0)
+        assertThat(actual.sections[1].getAscendingTrains().size).isEqualTo(1)
+        assertThat(sections.sections[1].getAscendingTrains().size).isEqualTo(0)
+    }
+
+    @Test
+    fun add_interStation_descending() {
+        val sections = Sections(
+            ascending,
+            descending,
+            listOf(
+                Section.Station("station1", mapOf(), ascending, descending),
+                Section.InterStation(ascending, descending),
+                Section.Station("station2", mapOf(), ascending, descending),
+            ))
+
+        val train = Train(
+            railDirection = descending,
+            fromStation = Station("station2", mapOf()),
+            toStation = Station("station1", mapOf())
+        )
+
+        val actual = sections.add(train)
+
+        assertThat(actual.sections[1].getDescendingTrains().size).isEqualTo(1)
+        assertThat(sections.sections[1].getDescendingTrains().size).isEqualTo(0)
     }
 
     @Test
     fun add_illegalState_same_from_to() {
-        val sections = Sections(listOf(
-            Section.Station("station1", mapOf(), ascending, descending),
-            Section.InterStation(ascending, descending),
-            Section.Station("station2", mapOf(), ascending, descending),
-        ))
+        val sections = Sections(
+            ascending,
+            descending,
+            listOf(
+                Section.Station("station1", mapOf(), ascending, descending),
+                Section.InterStation(ascending, descending),
+                Section.Station("station2", mapOf(), ascending, descending),
+            ))
 
         val train = Train(
+            ascending,
             fromStation = Station("station1", mapOf()),
             toStation = Station("station1", mapOf())
         )
@@ -68,15 +101,19 @@ class SectionsTest {
 
     @Test
     fun add_illegalState_too_wide_from_to() {
-        val sections = Sections(listOf(
-            Section.Station("station1", mapOf(), ascending, descending),
-            Section.InterStation(ascending, descending),
-            Section.Station("station2", mapOf(), ascending, descending),
-            Section.InterStation(ascending, descending),
-            Section.Station("station3", mapOf(), ascending, descending),
-        ))
+        val sections = Sections(
+            ascending,
+            descending,
+            listOf(
+                Section.Station("station1", mapOf(), ascending, descending),
+                Section.InterStation(ascending, descending),
+                Section.Station("station2", mapOf(), ascending, descending),
+                Section.InterStation(ascending, descending),
+                Section.Station("station3", mapOf(), ascending, descending),
+            ))
 
         val train = Train(
+            ascending,
             fromStation = Station("station1", mapOf()),
             toStation = Station("station3", mapOf())
         )

@@ -16,7 +16,7 @@ class RailwayStatus {
                 }
             }
         this.color = railway.color
-        this.sections = Sections(sections)
+        this.sections = Sections(railway.ascendingDirection, railway.descendingDirection, sections)
         this.railwayTitle = railway.railwayTitle
     }
 
