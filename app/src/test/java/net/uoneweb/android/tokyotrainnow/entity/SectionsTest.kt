@@ -14,15 +14,17 @@ class SectionsTest {
             Section.Station("station2", mapOf()),
         ))
 
+        val direction = RailDirection("odpt.RailDirection:OuterLoop")
         val train = Train(
+            railDirection = direction,
             fromStation = Station("station1", mapOf()),
             toStation = Station.Empty
         )
 
         val actual = sections.add(train)
 
-        assertThat(actual.sections[0].trains.size).isEqualTo(1)
-        assertThat(sections.sections[0].trains.size).isEqualTo(0)
+        assertThat(actual.sections[0].tracks.size).isEqualTo(1)
+        assertThat(sections.sections[0].tracks.size).isEqualTo(0)
     }
 
     @Test
@@ -33,15 +35,17 @@ class SectionsTest {
             Section.Station("station2", mapOf()),
         ))
 
+        val direction = RailDirection("odpt.RailDirection:OuterLoop")
         val train = Train(
+            railDirection = direction,
             fromStation = Station("station1", mapOf()),
             toStation = Station("station2", mapOf())
         )
 
         val actual = sections.add(train)
 
-        assertThat(actual.sections[1].trains.size).isEqualTo(1)
-        assertThat(sections.sections[1].trains.size).isEqualTo(0)
+        assertThat(actual.sections[1].tracks.size).isEqualTo(1)
+        assertThat(sections.sections[1].tracks.size).isEqualTo(0)
     }
 
     @Test

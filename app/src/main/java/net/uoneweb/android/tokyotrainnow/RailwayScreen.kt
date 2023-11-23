@@ -80,9 +80,11 @@ fun Station(lineColor: Color, section: Section.Station) {
                 .align(Alignment.CenterVertically),
             text = section.title["ja"] ?: "")
         Line(Modifier.width(20.dp).fillMaxHeight(), lineColor, section)
-        Column {
-            section.trains.forEach {
-                TrainOnLine(train = it)
+        Row {
+            section.tracks.forEach {
+                it.value.forEach {
+                    TrainOnLine(train = it)
+                }
             }
         }
     }
@@ -93,9 +95,11 @@ fun InterStation(lineColor: Color, section: Section.InterStation) {
     Row(modifier = Modifier.height(IntrinsicSize.Min)) {
         Text(modifier = Modifier.width(100.dp), text = "")
         Line(Modifier.width(20.dp).fillMaxHeight(), lineColor, section)
-        Column {
-            section.trains.forEach {
-                TrainOnLine(train = it)
+        Row {
+            section.tracks.forEach {
+                it.value.forEach {
+                    TrainOnLine(train = it)
+                }
             }
         }
     }
@@ -135,22 +139,24 @@ fun TrainOnLine(train: Train) {
 @Preview(widthDp = 480)
 @Composable
 fun RailwayPreview() {
+    val directionA = RailDirection("odpt.RailDirection:OuterLoop", mapOf("ja" to "外回り"))
+    val directionB = RailDirection("odpt.RailDirection:InnerLoop", mapOf("ja" to "内回り"))
     Surface {
         Railway(railwayStatus = RailwayStatus(
             color = parseColor("#CF3366"),
             railwayTitle = mapOf("ja" to "大江戸線", "en" to "Oedo Line"),
             sections = Sections(listOf(
-                tochomaeStation(listOf(
-                    createTrain(),
-                    createTrain()
-                )),
-                interStation(listOf(
-                    createTrain(),
-                    createTrain()
-                )),
-                shinjukuNishiguchiStation(listOf(
-                    createTrain()
-                )),
+                tochomaeStation(mapOf(directionA to listOf(
+                    createTrain(directionA, "1427A"),
+                    createTrain(directionB, "1427B")
+                ))),
+                interStation(mapOf(directionA to listOf(
+                    createTrain(directionA, "1428A"),
+                    createTrain(directionB, "1428B")
+                ))),
+                shinjukuNishiguchiStation(mapOf(directionA to listOf(
+                    createTrain(directionA, "1429A")
+                ))),
                 interStation(),
                 higashiShinjukuStation()
             )
@@ -161,14 +167,15 @@ fun RailwayPreview() {
 @Preview
 @Composable
 fun StationPreview() {
+    val directionA = RailDirection("odpt.RailDirection:OuterLoop", mapOf("ja" to "外回り"))
     Surface {
         Station(
             lineColor = Color(parseColor("#CF3366")),
             section = tochomaeStation(
-                trains = listOf(
-                    createTrain(),
-                    createTrain()
-                )
+                tracks = mapOf(directionA to listOf(
+                    createTrain(directionA, "1427B"),
+                    createTrain(directionA, "1427B")
+                ))
             )
         )
     }
@@ -177,21 +184,23 @@ fun StationPreview() {
 @Preview
 @Composable
 fun InterStationPreview() {
+    val directionA = RailDirection("odpt.RailDirection:OuterLoop", mapOf("ja" to "外回り"))
     Surface {
         InterStation(
             lineColor = Color(parseColor("#CF3366")),
-            section = interStation(trains = listOf(
-            createTrain(),
-            createTrain()
-        )))
+            section = interStation(tracks = mapOf(directionA to listOf(
+            createTrain(directionA, "1427B"),
+            createTrain(directionA, "1427B")
+        ))))
     }
 }
 
 @Preview
 @Composable
 fun TrainOnLinePreview() {
+    val directionA = RailDirection("odpt.RailDirection:OuterLoop", mapOf("ja" to "外回り"))
     Surface {
-        TrainOnLine(train = createTrain())
+        TrainOnLine(train = createTrain(directionA, "1427B"))
     }
 }
 
@@ -217,11 +226,11 @@ fun LinePreviewSection() {
     }
 }
 
-private fun createTrain() =
+private fun createTrain(direction: RailDirection, trainNumber: String) =
     Train(
-        railDirection = RailDirection("odpt.RailDirection:OuterLoop", mapOf("ja" to "外回り")),
+        railDirection = direction,
         trainType = TrainType("odpt.TrainType:Toei.Local", mapOf("ja" to "各駅停車")),
-        trainNumber = "1427B",
+        trainNumber = trainNumber,
         fromStation = Station("odpt.Station:Toei.Oedo.Tsukishima", mapOf("ja" to "月島")),
         toStation = Station("odpt.Station:Toei.Oedo.Kachidoki", mapOf("ja" to "勝どき")),
         destinationStation = listOf(Station("odpt.Station:Toei.Oedo.Hikarigaoka", mapOf("ja" to "光が丘"))),
@@ -229,30 +238,30 @@ private fun createTrain() =
         carComposition = 0
     )
 
-private fun interStation(trains : List<Train> = listOf()) : Section.InterStation {
-    return Section.InterStation(trains)
+private fun interStation(tracks : Map<RailDirection, List<Train>> = mapOf()) : Section.InterStation {
+    return Section.InterStation(tracks)
 }
 
-private fun tochomaeStation(trains : List<Train> = listOf()) : Section.Station{
+private fun tochomaeStation(tracks : Map<RailDirection, List<Train>> = mapOf()) : Section.Station{
     return Section.Station(
         stationId = "odpt.Station:Toei.Oedo.Tochomae",
         title = mapOf("ja" to "都庁前", "en" to "Tochomae"),
-        trains = trains
+        tracks = tracks
     )
 }
 
-private fun shinjukuNishiguchiStation(trains : List<Train>) : Section.Station{
+private fun shinjukuNishiguchiStation(tracks : Map<RailDirection, List<Train>> = mapOf()) : Section.Station{
     return Section.Station(
         stationId = "odpt.Station:Toei.Oedo.ShinjukuNishiguchi",
         title = mapOf("ja" to "新宿西口", "en" to "ShinjukuNishiguchi"),
-        trains = trains
+        tracks = tracks
     )
 }
 
-private fun higashiShinjukuStation(trains : List<Train> = listOf()) : Section.Station{
+private fun higashiShinjukuStation(tracks : Map<RailDirection, List<Train>> = mapOf()) : Section.Station{
     return Section.Station(
         stationId = "odpt.Station:Toei.Oedo.HigashiShinjuku",
         title = mapOf("ja" to "東新宿", "en" to "Higashi-shinjuku"),
-        trains = trains
+        tracks = tracks
     )
 }
