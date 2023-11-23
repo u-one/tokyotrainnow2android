@@ -80,13 +80,13 @@ fun Station(lineColor: Color, section: Section.Station) {
                 .align(Alignment.CenterVertically),
             text = section.title["ja"] ?: "")
         Column(modifier = Modifier.width(150.dp)) {
-            section.getAscendingTrains().forEach {
+            section.ascendingTrains.forEach {
                 TrainOnLine(train = it)
             }
         }
         Line(Modifier.width(20.dp).fillMaxHeight(), lineColor, section)
         Column(modifier = Modifier.width(150.dp)) {
-            section.getDescendingTrains().forEach {
+            section.descendingTrains.forEach {
                 TrainOnLine(train = it)
             }
         }
@@ -98,13 +98,13 @@ fun InterStation(lineColor: Color, section: Section.InterStation) {
     Row(modifier = Modifier.height(IntrinsicSize.Min)) {
         Text(modifier = Modifier.width(100.dp), text = "")
         Column(modifier = Modifier.width(150.dp)) {
-            section.getAscendingTrains().forEach {
+            section.ascendingTrains.forEach {
                 TrainOnLine(train = it)
             }
         }
         Line(Modifier.width(20.dp).fillMaxHeight(), lineColor, section)
         Column(modifier = Modifier.width(150.dp)) {
-            section.getDescendingTrains().forEach {
+            section.descendingTrains.forEach {
                 TrainOnLine(train = it)
             }
         }

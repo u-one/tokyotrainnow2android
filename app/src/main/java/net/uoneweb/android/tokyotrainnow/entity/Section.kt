@@ -6,11 +6,12 @@ sealed class Section() {
     abstract val descendingDirection: RailDirection
     abstract val tracks: Map<RailDirection, List<Train>>
 
-
     abstract fun add(train: Train): Section
 
-    abstract fun getAscendingTrains(): List<Train>
-    abstract fun getDescendingTrains(): List<Train>
+    val ascendingTrains: List<Train> get() = tracks[ascendingDirection] ?: listOf()
+
+    val descendingTrains: List<Train> get() = tracks[descendingDirection] ?: listOf()
+
     data class Station(
         val stationId: String,
         val title: Map<String, String>,
@@ -27,15 +28,8 @@ sealed class Section() {
 
             return copy(tracks = newTracks)
         }
-
-        override fun getAscendingTrains(): List<Train> {
-            return tracks[ascendingDirection] ?: listOf()
-        }
-
-        override fun getDescendingTrains(): List<Train> {
-            return tracks[descendingDirection] ?: listOf()
-        }
     }
+
     data class InterStation(
         override val ascendingDirection: RailDirection,
         override val descendingDirection: RailDirection,
@@ -48,17 +42,7 @@ sealed class Section() {
             newTrains.add(train)
             newTracks[train.railDirection] = newTrains
 
-            return copy(
-                tracks = newTracks
-            )
-        }
-
-        override fun getAscendingTrains(): List<Train> {
-            return tracks[ascendingDirection] ?: listOf()
-        }
-
-        override fun getDescendingTrains(): List<Train> {
-            return tracks[descendingDirection] ?: listOf()
+            return copy(tracks = newTracks)
         }
     }
 }

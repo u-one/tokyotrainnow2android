@@ -48,8 +48,8 @@ class SectionsTest {
 
         val actual = sections.add(train)
 
-        assertThat(actual.sections[1].getAscendingTrains().size).isEqualTo(1)
-        assertThat(sections.sections[1].getAscendingTrains().size).isEqualTo(0)
+        assertThat(actual.sections[1].ascendingTrains.size).isEqualTo(1)
+        assertThat(sections.sections[1].ascendingTrains.size).isEqualTo(0)
     }
 
     @Test
@@ -71,8 +71,8 @@ class SectionsTest {
 
         val actual = sections.add(train)
 
-        assertThat(actual.sections[1].getDescendingTrains().size).isEqualTo(1)
-        assertThat(sections.sections[1].getDescendingTrains().size).isEqualTo(0)
+        assertThat(actual.sections[1].descendingTrains.size).isEqualTo(1)
+        assertThat(sections.sections[1].descendingTrains.size).isEqualTo(0)
     }
 
     @Test

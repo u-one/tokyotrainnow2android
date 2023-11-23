@@ -60,7 +60,7 @@ class RailwayStatusTest {
 
         assertThat(actual).isNotEqualTo(railwayStatus)
         assertThat(actual.sections.sections[1].tracks.size).isEqualTo(1)
-        assertThat(actual.sections.sections[1].getAscendingTrains().size).isEqualTo(1)
+        assertThat(actual.sections.sections[1].ascendingTrains.size).isEqualTo(1)
     }
 
     private val ascending = RailDirection("odpt.RailDirection:OuterLoop", mapOf("ja" to "外回り"))
