@@ -10,9 +10,9 @@ class RailwayStatus {
         val lastIndex = railway.stations.lastIndex
         railway.stations
             .forEachIndexed { index, station ->
-                sections.add(Section.Station(station.stationId, station.stationTitle))
+                sections.add(Section.Station(station.stationId, station.stationTitle, railway.ascendingDirection, railway.descendingDirection))
                 if (index != lastIndex) {
-                    sections.add(Section.InterStation())
+                    sections.add(Section.InterStation(railway.ascendingDirection, railway.descendingDirection))
                 }
             }
         this.color = railway.color

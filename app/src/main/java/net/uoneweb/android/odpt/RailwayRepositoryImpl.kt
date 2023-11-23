@@ -18,7 +18,7 @@ class RailwayRepositoryImpl @Inject constructor(
             it.sameAs == railway
         }?.let {
             toRailwayEntity(it)
-        } ?:  RailwayEntity(0, listOf())
+        } ?:  RailwayEntity()
     }
 
     override suspend fun getTrains(railway: String): List<Train> {
@@ -45,7 +45,7 @@ class RailwayRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun toRailwayEntity(railway: Railway): RailwayEntity {
+    private suspend fun toRailwayEntity(railway: Railway): RailwayEntity {
         val stations = railway.stationOrder.sortedBy {
             it.index
         }.map {
@@ -54,10 +54,14 @@ class RailwayRepositoryImpl @Inject constructor(
                 stationTitle = it.stationTitle
             )
         }.toList()
+        val asc = getRailDirection(railway.ascendingRailDirection)
+        val dsc = getRailDirection(railway.descendingRailDirection)
 
         return RailwayEntity(
             railwayTitle = railway.railwayTitle,
             color = parseColor(railway.color),
+            ascendingDirection = asc,
+            descendingDirection = dsc,
             stations = stations
         )
     }

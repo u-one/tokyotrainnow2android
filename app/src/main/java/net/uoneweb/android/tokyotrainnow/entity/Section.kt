@@ -1,23 +1,64 @@
 package net.uoneweb.android.tokyotrainnow.entity
 
+
 sealed class Section() {
-    abstract val trains: List<Train>
+    abstract val ascendingDirection: RailDirection
+    abstract val descendingDirection: RailDirection
+    abstract val tracks: Map<RailDirection, List<Train>>
+
 
     abstract fun add(train: Train): Section
-    data class Station(val stationId: String, val title: Map<String, String>, override val trains: List<Train> = listOf()) : Section() {
+
+    abstract fun getAscendingTrains(): List<Train>
+    abstract fun getDescendingTrains(): List<Train>
+    data class Station(
+        val stationId: String,
+        val title: Map<String, String>,
+        override val ascendingDirection: RailDirection,
+        override val descendingDirection: RailDirection,
+        override val tracks: Map<RailDirection, List<Train>> = mapOf(),
+    ) : Section() {
         override fun add(train: Train): Station {
-            return Station(
-                stationId = stationId,
-                title = title,
-                trains = trains.toMutableList().apply {add(train)}
-            )
+            val newTracks = tracks.toMutableMap()
+            val trains = newTracks[train.railDirection] ?: mutableListOf()
+            val newTrains = trains.toMutableList()
+            newTrains.add(train)
+            newTracks[train.railDirection] = newTrains
+
+            return copy(tracks = newTracks)
+        }
+
+        override fun getAscendingTrains(): List<Train> {
+            return tracks[ascendingDirection] ?: listOf()
+        }
+
+        override fun getDescendingTrains(): List<Train> {
+            return tracks[descendingDirection] ?: listOf()
         }
     }
-    data class InterStation(override val trains: List<Train> = listOf()): Section() {
+    data class InterStation(
+        override val ascendingDirection: RailDirection,
+        override val descendingDirection: RailDirection,
+        override val tracks: Map<RailDirection, List<Train>> = mapOf()
+    ): Section() {
         override fun add(train: Train): InterStation {
-            return InterStation(
-                trains = trains.toMutableList().apply {add(train)}
+            val newTracks = tracks.toMutableMap()
+            val trains = newTracks[train.railDirection] ?: mutableListOf()
+            val newTrains = trains.toMutableList()
+            newTrains.add(train)
+            newTracks[train.railDirection] = newTrains
+
+            return copy(
+                tracks = newTracks
             )
+        }
+
+        override fun getAscendingTrains(): List<Train> {
+            return tracks[ascendingDirection] ?: listOf()
+        }
+
+        override fun getDescendingTrains(): List<Train> {
+            return tracks[descendingDirection] ?: listOf()
         }
     }
 }
