@@ -7,32 +7,38 @@ class SectionTest {
 
     @Test
     fun station_add() {
-        val railDirection = RailDirection("odpt.RailDirection:OuterLoop")
         val section = Section.Station(
             "station_id",
             mapOf("ja" to "ja_title"),
-            RailDirection("odpt.RailDirection:OuterLoop"),
-            RailDirection("odpt.RailDirection:InnerLoop"),
-            mapOf())
+            Tracks(
+                ascending,
+                descending,
+                mapOf()
+            )
+        )
 
-        val actual = section.add(Train(railDirection = railDirection))
+        val actual = section.add(Train(railDirection = ascending))
 
-        assertThat(actual.tracks[railDirection]?.size).isEqualTo(1)
-        assertThat(actual.tracks.size).isEqualTo(1)
-        assertThat(section.tracks).isEmpty()
+        assertThat(actual.tracks.ascendingTrains.size).isEqualTo(1)
+        assertThat(actual.tracks.descendingTrains).isEmpty()
     }
 
     @Test
     fun interStation_add() {
-        val railDirection = RailDirection("odpt.RailDirection:OuterLoop")
         val section = Section.InterStation(
-            RailDirection("odpt.RailDirection:OuterLoop"),
-            RailDirection("odpt.RailDirection:InnerLoop"),
-            mapOf())
+            Tracks(
+                ascending,
+                descending,
+                mapOf()
+            )
+        )
 
-        val actual = section.add(Train(railDirection = railDirection))
+        val actual = section.add(Train(railDirection = ascending))
 
-        assertThat(actual.tracks[railDirection]?.size).isEqualTo(1)
-        assertThat(section.tracks).isEmpty()
+        assertThat(actual.tracks.ascendingTrains.size).isEqualTo(1)
+        assertThat(actual.tracks.descendingTrains).isEmpty()
     }
+
+    private val ascending = RailDirection("odpt.RailDirection:OuterLoop", mapOf("ja" to "外回り"))
+    private val descending = RailDirection("odpt.RailDirection:InnerLoop", mapOf("ja" to "内回り"))
 }
