@@ -28,6 +28,7 @@ import net.uoneweb.android.tokyotrainnow.entity.RailwayStatus
 import net.uoneweb.android.tokyotrainnow.entity.Section
 import net.uoneweb.android.tokyotrainnow.entity.Sections
 import net.uoneweb.android.tokyotrainnow.entity.Station
+import net.uoneweb.android.tokyotrainnow.entity.Tracks
 import net.uoneweb.android.tokyotrainnow.entity.Train
 import net.uoneweb.android.tokyotrainnow.entity.TrainType
 
@@ -55,7 +56,7 @@ fun Railway(modifier: Modifier = Modifier, railwayStatus: RailwayStatus) {
                 Text(modifier = modifier, text = railwayStatus.railwayTitle["ja"] ?: "")
             }
         }
-        items(railwayStatus.sections.sections) {
+        items(items = railwayStatus.sections.sections) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -180,7 +181,7 @@ fun RailwayPreview() {
 
 @Preview
 @Composable
-fun StationPreview() {
+private fun StationPreview() {
     Surface {
         Station(
             lineColor = Color(parseColor("#CF3366")),
@@ -261,9 +262,11 @@ private fun createTrain(direction: RailDirection, trainNumber: String) =
 
 private fun interStation(tracks : Map<RailDirection, List<Train>> = mapOf()) : Section.InterStation {
     return Section.InterStation(
+        Tracks(
         ascendingDirection = ascending,
         descendingDirection = descending,
         tracks = tracks
+        )
     )
 }
 
@@ -271,9 +274,11 @@ private fun tochomaeStation(tracks : Map<RailDirection, List<Train>> = mapOf()) 
     return Section.Station(
         stationId = "odpt.Station:Toei.Oedo.Tochomae",
         title = mapOf("ja" to "都庁前", "en" to "Tochomae"),
+        tracks = Tracks(
         tracks = tracks,
         ascendingDirection = ascending,
         descendingDirection = descending,
+        )
     )
 }
 
@@ -281,9 +286,11 @@ private fun shinjukuNishiguchiStation(tracks : Map<RailDirection, List<Train>> =
     return Section.Station(
         stationId = "odpt.Station:Toei.Oedo.ShinjukuNishiguchi",
         title = mapOf("ja" to "新宿西口", "en" to "ShinjukuNishiguchi"),
+        tracks = Tracks(
         tracks = tracks,
         ascendingDirection = ascending,
         descendingDirection = descending,
+        )
     )
 }
 
@@ -291,8 +298,10 @@ private fun higashiShinjukuStation(tracks : Map<RailDirection, List<Train>> = ma
     return Section.Station(
         stationId = "odpt.Station:Toei.Oedo.HigashiShinjuku",
         title = mapOf("ja" to "東新宿", "en" to "Higashi-shinjuku"),
+        tracks = Tracks(
         tracks = tracks,
         ascendingDirection = ascending,
         descendingDirection = descending,
+        )
     )
 }

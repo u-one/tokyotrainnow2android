@@ -1,22 +1,16 @@
 package net.uoneweb.android.tokyotrainnow.entity
 
+import androidx.compose.runtime.Stable
+
+@Stable
 class RailwayStatus {
     val color: Int
     val sections: Sections
     val railwayTitle: Map<String, String>
 
     constructor(railway: Railway) {
-        val sections = mutableListOf<Section>()
-        val lastIndex = railway.stations.lastIndex
-        railway.stations
-            .forEachIndexed { index, station ->
-                sections.add(Section.Station(station.stationId, station.stationTitle, railway.ascendingDirection, railway.descendingDirection))
-                if (index != lastIndex) {
-                    sections.add(Section.InterStation(railway.ascendingDirection, railway.descendingDirection))
-                }
-            }
         this.color = railway.color
-        this.sections = Sections(railway.ascendingDirection, railway.descendingDirection, sections)
+        this.sections = Sections.Factory.create(railway)
         this.railwayTitle = railway.railwayTitle
     }
 

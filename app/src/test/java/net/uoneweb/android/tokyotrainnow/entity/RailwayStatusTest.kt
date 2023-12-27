@@ -32,9 +32,9 @@ class RailwayStatusTest {
             ascending,
             descending,
             listOf(
-            Section.Station("station1", mapOf(), ascending, descending, mapOf()),
-            Section.InterStation(ascending, descending, mapOf()),
-            Section.Station("station2", mapOf(), ascending, descending, mapOf())
+            Section.Station("station1", mapOf(), Tracks(ascending, descending, mapOf())),
+            Section.InterStation(Tracks(ascending, descending, mapOf())),
+            Section.Station("station2", mapOf(), Tracks(ascending, descending, mapOf()))
         )))
         assertThat(actual.railwayTitle).isEqualTo(mapOf("ja" to "title"))
     }
@@ -45,9 +45,9 @@ class RailwayStatusTest {
             ascending,
             descending,
             listOf(
-            Section.Station("station1", mapOf(), ascending, descending, mapOf()),
-            Section.InterStation(ascending, descending, mapOf()),
-            Section.Station("station2", mapOf(), ascending, descending, mapOf())
+            Section.Station("station1", mapOf(), Tracks(ascending, descending, mapOf())),
+            Section.InterStation(Tracks(ascending, descending, mapOf())),
+            Section.Station("station2", mapOf(), Tracks(ascending, descending, mapOf()))
         )))
 
         val actual = railwayStatus.add(
@@ -59,7 +59,6 @@ class RailwayStatusTest {
         )
 
         assertThat(actual).isNotEqualTo(railwayStatus)
-        assertThat(actual.sections.sections[1].tracks.size).isEqualTo(1)
         assertThat(actual.sections.sections[1].ascendingTrains.size).isEqualTo(1)
     }
 

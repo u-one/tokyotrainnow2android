@@ -3,12 +3,33 @@ package net.uoneweb.android.tokyotrainnow.entity
 import java.lang.IllegalStateException
 
 data class Sections(
-    val ascendingDirection: RailDirection,
-    val descendingDirection: RailDirection,
-    val sections: List<Section>) {
+    private val ascendingDirection: RailDirection,
+    private val descendingDirection: RailDirection,
+    val sections: List<Section> = listOf()) {
 
     init {
         require(sections.size >= 3)
+    }
+
+    class Factory {
+        companion object {
+            fun create(railway: Railway): Sections {
+                val sections = mutableListOf<Section>()
+                val lastIndex = railway.stations.lastIndex
+                railway.stations
+                    .forEachIndexed { index, station ->
+                        sections.add(Section.Station(station.stationId, station.stationTitle, Tracks(railway.ascendingDirection, railway.descendingDirection)))
+                        if (index != lastIndex) {
+                            sections.add(Section.InterStation(Tracks(railway.ascendingDirection, railway.descendingDirection)))
+                        }
+                    }
+                return Sections(railway.ascendingDirection, railway.descendingDirection, sections)
+            }
+        }
+    }
+
+    operator fun get(index: Int): Section {
+        return sections[index]
     }
 
     fun add(train: Train): Sections {

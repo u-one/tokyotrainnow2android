@@ -2,47 +2,28 @@ package net.uoneweb.android.tokyotrainnow.entity
 
 
 sealed class Section() {
-    abstract val ascendingDirection: RailDirection
-    abstract val descendingDirection: RailDirection
-    abstract val tracks: Map<RailDirection, List<Train>>
+    abstract val tracks: Tracks
 
     abstract fun add(train: Train): Section
 
-    val ascendingTrains: List<Train> get() = tracks[ascendingDirection] ?: listOf()
-
-    val descendingTrains: List<Train> get() = tracks[descendingDirection] ?: listOf()
+    val ascendingTrains: List<Train> by lazy { tracks.ascendingTrains }
+    val descendingTrains: List<Train> by lazy { tracks.descendingTrains }
 
     data class Station(
         val stationId: String,
         val title: Map<String, String>,
-        override val ascendingDirection: RailDirection,
-        override val descendingDirection: RailDirection,
-        override val tracks: Map<RailDirection, List<Train>> = mapOf(),
+        override val tracks: Tracks,
     ) : Section() {
         override fun add(train: Train): Station {
-            val newTracks = tracks.toMutableMap()
-            val trains = newTracks[train.railDirection] ?: mutableListOf()
-            val newTrains = trains.toMutableList()
-            newTrains.add(train)
-            newTracks[train.railDirection] = newTrains
-
-            return copy(tracks = newTracks)
+            return copy(tracks = tracks.add(train))
         }
     }
 
     data class InterStation(
-        override val ascendingDirection: RailDirection,
-        override val descendingDirection: RailDirection,
-        override val tracks: Map<RailDirection, List<Train>> = mapOf()
+        override val tracks: Tracks,
     ): Section() {
         override fun add(train: Train): InterStation {
-            val newTracks = tracks.toMutableMap()
-            val trains = newTracks[train.railDirection] ?: mutableListOf()
-            val newTrains = trains.toMutableList()
-            newTrains.add(train)
-            newTracks[train.railDirection] = newTrains
-
-            return copy(tracks = newTracks)
+            return copy(tracks = tracks.add(train))
         }
     }
 }
