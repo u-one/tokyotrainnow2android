@@ -1,6 +1,8 @@
 package net.uoneweb.android.tokyotrainnow.entity
 
+import androidx.compose.runtime.Stable
 
+@Stable
 sealed class Section() {
     abstract val tracks: Tracks
 
@@ -9,6 +11,7 @@ sealed class Section() {
     val ascendingTrains: List<Train> by lazy { tracks.ascendingTrains }
     val descendingTrains: List<Train> by lazy { tracks.descendingTrains }
 
+    @Stable
     data class Station(
         val stationId: String,
         val title: Map<String, String>,
@@ -19,6 +22,7 @@ sealed class Section() {
         }
     }
 
+    @Stable
     data class InterStation(
         override val tracks: Tracks,
     ): Section() {

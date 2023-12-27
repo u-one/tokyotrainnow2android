@@ -47,6 +47,11 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs = freeCompilerArgs + listOf(
+            "-P",
+            "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination="
+                    + "${project.layout.buildDirectory.get()}/compose_metrics"
+        )
     }
     buildFeatures {
         compose = true
