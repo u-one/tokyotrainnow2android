@@ -128,8 +128,8 @@ fun TrainOnLine(train: Train) {
         Text(text = train.trainNumber)
         Row {
             Text(text = (train.trainType.titles["ja"] ?: "") + " ")
-            val text = train.destinationStation.map { it.titles["ja"] ?: ""}
-                .joinToString("・") + "行"
+            val text = train.destinationStation
+                .joinToString("・"){ it.titles["ja"] ?: ""} + "行"
             Text(text = text)
         }
         Row {
