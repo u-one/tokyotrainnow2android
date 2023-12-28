@@ -53,7 +53,14 @@ data class Sections(
         val sectionIndex = if (isAscending) {
             fromIndex + 1
         } else {
-            fromIndex - 1
+            if (fromIndex < 1) {
+                // TODO: Refactor, this is a workaround for the case where the train is on the other duplicated station on a loop.
+                sections.indexOfLast { it ->
+                    it is Section.Station && it.stationId == from.sameAs
+                }
+            } else {
+                fromIndex - 1
+            }
         }
 
         newSections[sectionIndex] = newSections[sectionIndex].add(train)
